@@ -1,6 +1,18 @@
 on: push
 jobs:
-  hello-world:
+  test-install-cli:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install 1Password CLI
+        uses: 1password/install-cli-action@v2
+        with:
+          version: "latest"
+
+      - name: Verify installation
+        run: op --version
+  test-load-secrets:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
