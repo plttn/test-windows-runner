@@ -1,10 +1,10 @@
 on: push
 jobs:
-  test-load-secrets:
+  this-job-works:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-
+      # if i install the CLI on the runner manually we're good
       - name: Install 1Password CLI
         uses: 1password/install-cli-action@v2
         with:
@@ -13,6 +13,21 @@ jobs:
       - name: Verify installation
         run: op --version
 
+      - name: Load secret
+        id: op-load-secret
+        uses: 1password/load-secrets-action@v2
+        with:
+          export-env: false
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          SECRET: op://app-cicd/hello-world/credential
+
+      - name: Print masked secret
+        run: 'echo "Secret: ${{ steps.op-load-secret.outputs.SECRET }}"'
+        # Prints: Secret: ***
+  this-job-doesnt:
+    runs-on: windows-latest
+    steps:
       - name: Load secret
         id: op-load-secret
         uses: 1password/load-secrets-action@v2
