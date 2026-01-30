@@ -40,3 +40,18 @@ jobs:
       - name: Print masked secret
         run: 'echo "Secret: ${{ steps.op-load-secret.outputs.SECRET }}"'
         # Prints: Secret: ***
+  this-job-too:
+    runs-on: windows-latest
+    steps:
+      - name: Load secret
+        id: op-load-secret
+        uses: 1password/load-secrets-action@v3
+        with:
+          export-env: false
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          SECRET: op://app-cicd/hello-world/credential
+
+      - name: Print masked secret
+        run: 'echo "Secret: ${{ steps.op-load-secret.outputs.SECRET }}"'
+        # Prints: Secret: ***
